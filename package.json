@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3001 -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "html5-qrcode": "^2.3.8",
     "html5-qrcode": "^2.3.8",
     "next": "16.0.3",
     "react": "19.2.0",
@@ -16,7 +17,7 @@
   },
   "devDependencies": {
     "@netlify/next": "^1.4.9",
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.17.1.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
