@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Fix QR scanner video display - ensure only ONE camera feed */
+#scanner-container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+}
+
+#scanner-container video {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
+  transform: scaleX(1) !important;
+  display: block !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Hide duplicate video elements - only show the first one */
+#scanner-container video:not(:first-of-type) {
+  display: none !important;
+}
+
+#scanner-container canvas {
+  display: none !important;
+}
+
+#qr-shaded-region {
+  border: none !important;
+}
