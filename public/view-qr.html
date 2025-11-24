@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Viewer</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin: 0 0 10px 0;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .instructions {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .instructions h3 {
+            margin: 0 0 12px 0;
+            color: #2d3748;
+            font-size: 16px;
+        }
+        
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .instructions code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #e53e3e;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            width: 100%;
+            margin-top: 12px;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: #48bb78;
+            width: auto;
+            margin: 15px auto 0;
+            display: block;
+            padding: 10px 20px;
+        }
+        
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+        
+        .qr-display {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e0;
+            display: none;
+        }
+        
+        .qr-display.show {
+            display: block;
+        }
+        
+        .qr-display h2 {
+            margin: 0 0 20px 0;
+            color: #2d3748;
+        }
+        
+        .qr-display img {
+            max-width: 300px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: white;
+            padding: 15px;
+        }
+        
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Viewer</h1>
+        <p class="subtitle">View and download QR codes from API responses</p>
+        
+        <div class="instructions">
+            <h3>How to use</h3>
+            <ol>
+                <li>Make a POST to <code>/attendance</code> or GET <code>/attendance/:id/qr</code></li>
+                <li>Copy the <code>qrCode</code> value from response</li>
+                <li>Paste it below and click View</li>
+            </ol>
+        </div>
+
+        <div class="input-section">
+            <label for="qrInput">QR Code Data URL</label>
+            <textarea id="qrInput" placeholder="data:image/png;base64,iVBORw0KGgo..."></textarea>
+            <div class="error" id="errorMsg"></div>
+            <button onclick="viewQR()">View QR Code</button>
+        </div>
+
+        <div id="qrDisplay" class="qr-display">
+            <h2>QR Code</h2>
+            <img id="qrImage" src="" alt="QR Code" />
+            <button class="btn-secondary" onclick="downloadQR()">Download</button>
+        </div>
+    </div>
+
+    <script>
+        function viewQR() {
+            const input = document.getElementById('qrInput').value.trim();
+            const display = document.getElementById('qrDisplay');
+            const img = document.getElementById('qrImage');
+            const error = document.getElementById('errorMsg');
+            
+            error.classList.remove('show');
+            
+            if (!input) {
+                showError('Please paste the QR code data URL');
+                return;
+            }
+
+            let qrData = input;
+            
+            if (qrData.startsWith('/png;base64,')) {
+                qrData = 'data:image' + qrData;
+            } else if (qrData.startsWith('png;base64,')) {
+                qrData = 'data:image/' + qrData;
+            } else if (qrData.startsWith('iVBORw0KGgo') || /^[A-Za-z0-9+/=]+$/.test(qrData)) {
+                qrData = 'data:image/png;base64,' + qrData;
+            }
+
+            if (!qrData.startsWith('data:image/')) {
+                showError('Invalid format');
+                return;
+            }
+
+            img.src = qrData;
+            display.classList.add('show');
+
+            img.onerror = function() {
+                showError('Failed to load image');
+            };
+        }
+
+        function showError(msg) {
+            const error = document.getElementById('errorMsg');
+            error.textContent = msg;
+            error.classList.add('show');
+        }
+
+        function downloadQR() {
+            const img = document.getElementById('qrImage');
+            if (!img.src) return;
+            
+            const a = document.createElement('a');
+            a.download = 'qrcode.png';
+            a.href = img.src;
+            a.click();
+        }
+
+        document.getElementById('qrInput').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                viewQR();
+            }
+        });
+    </script>
+</body>
+</html>

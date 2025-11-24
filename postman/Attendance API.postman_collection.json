@@ -1,0 +1,188 @@
+{
+	"info": {
+		"name": "Attendance API",
+		"description": "Collection for Attendance Module API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Attendance (Scan)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"age\": 30,\n  \"phoneNumber\": \"+1234567890\",\n  \"image\": [\n    \"https://example.com/image1.jpg\",\n    \"https://example.com/image2.jpg\"\n  ],\n  \"city\": \"New York\",\n  \"province\": \"NY\",\n  \"companyName\": \"Tech Corp\",\n  \"position\": \"Software Engineer\",\n  \"date\": \"2024-01-15T10:00:00Z\",\n  \"remark\": \"VIP attendee\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/attendance",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance"
+					]
+				},
+				"description": "Create a new attendance record and generate QR code"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Attendances (Paginated)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/attendance?page=1&limit=10",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"description": "Page number (default: 1)"
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"description": "Items per page (default: 10)"
+						}
+					]
+				},
+				"description": "Get all attendances with pagination"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Attendance by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/attendance/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ATTENDANCE_ID_HERE",
+							"description": "Attendance ID (MongoDB ObjectId)"
+						}
+					]
+				},
+				"description": "Get a single attendance record by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Get QR Code for Attendance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/attendance/:id/qr",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance",
+						":id",
+						"qr"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ATTENDANCE_ID_HERE",
+							"description": "Attendance ID (MongoDB ObjectId)"
+						}
+					]
+				},
+				"description": "Get QR code for a specific attendance record"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Attendance",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"remark\": \"Updated remark\",\n  \"position\": \"Senior Software Engineer\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/attendance/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ATTENDANCE_ID_HERE",
+							"description": "Attendance ID (MongoDB ObjectId)"
+						}
+					]
+				},
+				"description": "Update an attendance record (partial update)"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Attendance",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/attendance/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"attendance",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ATTENDANCE_ID_HERE",
+							"description": "Attendance ID (MongoDB ObjectId)"
+						}
+					]
+				},
+				"description": "Delete an attendance record"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
+
