@@ -1,0 +1,5 @@
+# Handle client-side routing
+/*    /index.html   200
+
+# API routes
+/api/*  /.netlify/functions/___netlify-handler  200

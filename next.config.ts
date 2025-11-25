@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Optimize for Netlify deployment
+  output: 'export',
   trailingSlash: true,
-  
+  images: {
+    unoptimized: true
+  },
+
   async headers() {
     return [
       {
