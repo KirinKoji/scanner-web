@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://147.185.221.224:10246';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+
+// 'http://147.185.221.224:10246';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
