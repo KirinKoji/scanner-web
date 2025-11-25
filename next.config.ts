@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Optimize for Netlify deployment
+  trailingSlash: true,
   
   async headers() {
     return [
