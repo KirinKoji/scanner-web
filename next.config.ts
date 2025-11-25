@@ -1,16 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  },
+  trailingSlash: false,
 
   async headers() {
     return [
       {
-        // Apply CORS headers to all API routes
         source: "/api/:path*",
         headers: [
           {

@@ -5,15 +5,6 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Handle client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# API routes should be handled by Next.js
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/___netlify-handler"
-  status = 200
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
