@@ -26,11 +26,11 @@ export default function ScannerPage() {
       if ('permissions' in navigator) {
         try {
           const permissionStatus = await navigator.permissions.query({ name: 'camera' as PermissionName });
-          
+
           if (permissionStatus.state === 'granted') {
             return true;
           }
-          
+
           if (permissionStatus.state === 'prompt') {
 
             try {
@@ -47,7 +47,7 @@ export default function ScannerPage() {
           // Permissions API might not support 'camera' name, fall through to getUserMedia
         }
       }
-      
+
       // Fallback: Try to access camera directly (will trigger permission prompt)
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -74,7 +74,7 @@ export default function ScannerPage() {
       const apiUrl = typeof window !== 'undefined' 
         ? `${window.location.origin}/api/scan`
         : '/api/scan';
-      
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -98,7 +98,7 @@ export default function ScannerPage() {
             console.error('Error stopping scanner:', stopError);
           }
         }
-        
+
         setTimeout(() => {
           setSuccessMessage('');
         }, 1500);
@@ -112,7 +112,7 @@ export default function ScannerPage() {
       } else {
         let errorMessage = 'Failed to send scan to server.';
         let errorDetails = '';
-        
+
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
@@ -127,7 +127,7 @@ export default function ScannerPage() {
             errorDetails = `\n${textResponse.substring(0, 200)}`;
           }
         }
-        
+
         setError(`${errorMessage}${errorDetails}`);
         isProcessingRef.current = false;
         lastScannedRef.current = '';
@@ -155,7 +155,7 @@ export default function ScannerPage() {
     if (errorMessage.includes('OverconstrainedError')) {
       return 'Camera constraints not supported. Trying alternative camera...';
     }
-    
+
     return 'Failed to start camera. Please check your browser permissions and try again.';
   };
 
@@ -337,10 +337,10 @@ export default function ScannerPage() {
   const handleRequestPermission = async () => {
     setIsRequestingPermission(true);
     setError('');
-    
+
     try {
       const granted = await requestCameraPermission();
-      
+
       if (granted) {
 
         await startScanning();
