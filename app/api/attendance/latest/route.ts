@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-
-// 'http://147.185.221.224:10246';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://136.228.131.251:3000';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
-  try {
+  try { 
     const res = await fetch(`${BACKEND_URL}/attendance?page=1&limit=100&t=${Date.now()}`, {
       cache: 'no-store',
     });
