@@ -21,20 +21,21 @@ async function bootstrap() {
       },
     }),
   );
-  
-  
+
   app.enableCors({
-    origin: true, // Allow all origins (for local network access)
+    origin: true,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   });
-  
+
   const port = process.env.PORT ?? 3000;
   // Listen on 0.0.0.0 to accept connections from other machines on the network
   await app.listen(port, '0.0.0.0');
   console.log(`🚀 QR Ticket Scanner API is running on:`);
   console.log(`   - http://localhost:${port} (same machine)`);
   console.log(`   - http://localhost:${port}/view-qr.html (QR Code Viewer)`);
-  // console.log(`   - http://0.0.0.0:${port} (network access)`);
-  // console.log(`   - Use your machine's IP address from other devices`);
+  console.log(`   - Network access: http://YOUR_IP:${port}`);
+  console.log(`   - CORS enabled for all origins (ready for Netlify frontend)`);
 }
 bootstrap();  

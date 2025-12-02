@@ -48,7 +48,7 @@ export class AttendanceController {
   async getQrImage(@Param('id') id: string, @Res() res: Response) {
     try {
       const qrCodeDataUrl = await this.attendanceService.getQrCodeAsDataUrl(id);
-      
+
       // Validate data URL format
       if (!qrCodeDataUrl || !qrCodeDataUrl.startsWith('data:image/png;base64,')) {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -57,7 +57,7 @@ export class AttendanceController {
         });
         return;
       }
-      
+
       // Extract base64 data from data URL
       const base64Data = qrCodeDataUrl.split(',')[1];
       if (!base64Data) {
@@ -66,9 +66,9 @@ export class AttendanceController {
         });
         return;
       }
-      
+
       const imageBuffer = Buffer.from(base64Data, 'base64');
-      
+
       res.setHeader('Content-Type', 'image/png');
       res.setHeader('Content-Disposition', 'inline; filename="qrcode.png"');
       res.send(imageBuffer);

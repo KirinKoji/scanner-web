@@ -6,6 +6,9 @@ export type AttendanceDocument = HydratedDocument<Attendance>;
 @Schema({ timestamps: true })
 export class Attendance {
     @Prop({ type: String, required: true })
+    userId: string;
+
+    @Prop({ type: String, required: true })
     firstName: string;
 
     @Prop({ type: String, required: true })
@@ -17,8 +20,8 @@ export class Attendance {
     @Prop({ type: String, required: true})
     phoneNumber: string;
 
-    @Prop({ type: [String], required: true })
-    image: string[];
+    @Prop({ type: String, required: true })
+    image: string;
 
     @Prop({ type: String, required: true })
     city: string;
@@ -41,7 +44,6 @@ export class Attendance {
 
 export const AttendanceSchema = SchemaFactory.createForClass(Attendance);
 
-// Add indexes for frequently queried fields
 AttendanceSchema.index({ phoneNumber: 1 });
 AttendanceSchema.index({ date: 1 });
 AttendanceSchema.index({ city: 1 });

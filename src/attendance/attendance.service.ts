@@ -88,7 +88,6 @@ export class AttendanceService {
       const attendance = await this.attendanceModel
         .findByIdAndUpdate(id, dto, { new: true, runValidators: true })
         .orFail()
-        .exec();
       return attendance as AttendanceDocument;
     } catch (error) {
       throw new NotFoundException(`Attendance with id ${id} not found`);
@@ -106,21 +105,18 @@ export class AttendanceService {
   private async generateQrCode(attendance: AttendanceDocument): Promise<string> {
     try {
       const payload = this.buildQrPayload(attendance);
-      const payloadString = JSON.stringify(payload);
-      
-      // Validate payload is not too large for QR code
-      if (payloadString.length > 2000) {
-        throw new Error('Payload too large for QR code generation');
+
+      if (!payload) {
+        throw new Error('Attendance ID is required for QR code generation');
       }
 
-      const dataUrl = await QRCode.toDataURL(payloadString, {
+      const dataUrl = await QRCode.toDataURL(payload, {
         errorCorrectionLevel: "M",
         margin: 1,
         width: 300,
         type: "image/png",
       });
 
-      // Validate the data URL format
       if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) {
         throw new Error('Invalid data URL format returned from QR code generator');
       }
@@ -134,22 +130,13 @@ export class AttendanceService {
     }
   }
 
-  private buildQrPayload(attendance: AttendanceDocument): Record<string, string> {
-    // Get first image, but if it's a data URL, truncate it or use a placeholder
-    let imageValue = attendance.image[0] || '';
-    
-    // If image is a data URL (too large for QR), use a placeholder
-    if (imageValue.startsWith('data:image/')) {
-      imageValue = 'image-provided'; // Placeholder instead of full data URL
-    }
-    
-    return {
-      attendanceId: attendance.id || '',
-      firstName: attendance.firstName || '',
-      lastName: attendance.lastName || '',
-      phoneNumber: attendance.phoneNumber || '',
-      image: imageValue,
-    };
+  private buildQrPayload(attendance: AttendanceDocument): string {
+    return attendance.id || '';
+  }
+
+  private async convertToPdf(attendance: AttendanceDocument): Promise<string> {
+    const pdf = await this.convertToPdf.apply(this, [attendance]);
+    return pdf.toBuffer().toString('base64');
   }
 
   private toAttendanceResponse(attendance: AttendanceDocument): AttendanceResponse {

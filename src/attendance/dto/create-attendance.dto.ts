@@ -3,6 +3,9 @@ import { IsArray, IsDate, IsInt, IsOptional, IsString, Min, Max, Matches, IsUrl,
 
 export class CreateAttendanceDto {
     @IsString()
+    userId: string;
+
+    @IsString()
     firstName: string;
 
     @IsString()
@@ -20,11 +23,9 @@ export class CreateAttendanceDto {
     })
     phoneNumber: string;
 
-    @IsArray()
-    @ArrayMinSize(1)
-    @IsString({ each: true })
+    @IsString()
     @IsUrl({}, { each: true, message: 'Each image must be a valid URL' })
-    image: string[];
+    image: string;
 
     @IsString()
     city: string;

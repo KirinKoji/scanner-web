@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
 import { AttendanceService } from './attendance.service';
-import { AttendanceController } from './attendance.controller';
+import { AttendanceController } from './attendance.controller'; 
 
 @Module({
   imports: [
@@ -12,4 +12,3 @@ import { AttendanceController } from './attendance.controller';
   providers: [AttendanceService],
 })
 export class AttendanceModule {}
-
